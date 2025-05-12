@@ -166,17 +166,13 @@ class CrosswordCreator():
                         queue.append((z, x))
         return True
 
-        raise NotImplementedError
-
     def assignment_complete(self, assignment):
         """
         Return True if `assignment` is complete (i.e., assigns a value to each
         crossword variable); return False otherwise.
         """
         return len(assignment) == len(self.crossword.variables)
-    
-        raise NotImplementedError
-
+        
     def consistent(self, assignment):
         """
         Return True if `assignment` is consistent (i.e., words fit in crossword
@@ -203,7 +199,6 @@ class CrosswordCreator():
                         
 
         return True
-        raise NotImplementedError
 
     def order_domain_values(self, var, assignment):
         """
@@ -220,8 +215,6 @@ class CrosswordCreator():
             if value in self.domains[neighbor]
         ))
         return values
-
-        raise NotImplementedError
 
     def select_unassigned_variable(self, assignment):
         """
@@ -244,7 +237,6 @@ class CrosswordCreator():
         # Return the first variable in the sorted list
         return unassigned_vars[0] if unassigned_vars else None
     
-        raise NotImplementedError
 
     def backtrack(self, assignment):
         """
@@ -255,7 +247,27 @@ class CrosswordCreator():
 
         If no assignment is possible, return None.
         """
-        raise NotImplementedError
+        if self.assignment_complete(assignment):
+            return assignment
+
+        # Select an unassigned variable
+        var = self.select_unassigned_variable(assignment)
+
+        # Iterate over the domain values of the variable
+        for value in self.order_domain_values(var, assignment):
+            # Create a copy of the assignment and add the variable-value pair
+            new_assignment = assignment.copy()
+            new_assignment[var] = value
+
+        # Check if the new assignment is consistent
+        if self.consistent(new_assignment):
+            # Recursively call backtrack with the new assignment
+            result = self.backtrack(new_assignment)
+            if result is not None:
+                return result
+
+    # If no solution is found, return None
+        return None
 
 
 def main():
